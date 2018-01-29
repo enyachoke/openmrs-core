@@ -23,7 +23,7 @@
 
 		<many-to-one name="cohort" column="cohort_id" class="Cohort" not-null="true" access="field"/>
 
-		<property name="patientId" type="int" column="patient_id" not-null="true"/>
+		<!-- <property name="patientId" type="int" column="patient_id" not-null="true"/> -->
 
 		<property name="startDate" column="start_date"
 				  not-null="true" length="19" type="java.util.Date" />
@@ -43,5 +43,9 @@
 
 		<many-to-one name="creator" class="User" not-null="true" />
 		<many-to-one name="voidedBy" class="User" column="voided_by" />
+		<!-- bi-directional many-to-one association to Patient -->
+		<many-to-one name="patient" class="Patient" not-null="true">
+			<column name="patient_id" />
+		</many-to-one>
 	</class>
 </hibernate-mapping>

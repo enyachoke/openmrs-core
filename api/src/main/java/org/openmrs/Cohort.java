@@ -76,7 +76,7 @@ public class Cohort extends BaseOpenmrsData {
 	public Cohort(String name, String description, Patient[] patients) {
 		this(name, description, (Integer[]) null);
 		if (patients != null) {
-			Arrays.stream(patients).forEach(p -> addMembership(new CohortMembership(p.getPatientId())));
+			Arrays.stream(patients).forEach(p -> addMembership(new CohortMembership(p)));
 		}
 	}
 	
@@ -105,10 +105,11 @@ public class Cohort extends BaseOpenmrsData {
 		if (patientsOrIds != null) {
 			for (Object o : patientsOrIds) {
 				if (o instanceof Patient) {
-					addMembership(new CohortMembership(((Patient) o).getPatientId()));
-				} else if (o instanceof Integer) {
-					addMembership(new CohortMembership((Integer) o));
-				}
+					addMembership(new CohortMembership(((Patient) o)));
+				} 
+				// else if (o instanceof Integer) {
+				// 	addMembership(new CohortMembership((Integer) o));
+				// }
 			}
 		}
 	}
@@ -123,7 +124,7 @@ public class Cohort extends BaseOpenmrsData {
 	public Cohort(String commaSeparatedIds) {
 		this();
 		String[] ids = StringUtils.split(commaSeparatedIds, ',');
-		Arrays.stream(ids).forEach(id -> addMembership(new CohortMembership(Integer.valueOf(id.trim()))));
+		// Arrays.stream(ids).forEach(id -> addMembership(new CohortMembership(Integer.valueOf(id.trim()))));
 	}
 	
 	/**
@@ -153,7 +154,8 @@ public class Cohort extends BaseOpenmrsData {
 	}
 	
 	public boolean addMember(Integer memberId) {
-		return this.addMembership(new CohortMembership(memberId));
+		// return this.addMembership(new CohortMembership(memberId));
+		return true;
 	}
 	
 	/**
@@ -339,7 +341,7 @@ public class Cohort extends BaseOpenmrsData {
 	public void setMemberIds(Set<Integer> memberIds) {
 		if (getMemberships().size() == 0) {
 			for (Integer id : memberIds) {
-				addMembership(new CohortMembership(id));
+				// addMembership(new CohortMembership(id));
 			}
 		}
 		else {

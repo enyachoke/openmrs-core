@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.hibernate.dialect.Sybase11Dialect;
 import org.openmrs.Cohort;
 import org.openmrs.CohortMembership;
 import org.openmrs.Patient;
@@ -113,7 +114,7 @@ public class CohortServiceImpl extends BaseOpenmrsService implements CohortServi
 	@Override
 	public Cohort addPatientToCohort(Cohort cohort, Patient patient) {
 		if (!cohort.contains(patient.getPatientId())) {
-			CohortMembership cohortMembership = new CohortMembership(patient.getPatientId());
+			CohortMembership cohortMembership = new CohortMembership(patient);
 			cohort.addMembership(cohortMembership);
 			Context.getCohortService().saveCohort(cohort);
 		}

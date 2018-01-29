@@ -19,34 +19,38 @@ import org.slf4j.LoggerFactory;
  * @since 2.1.0
  */
 public class CohortMembership extends BaseOpenmrsData implements Comparable<CohortMembership> {
-	
+
 	public static final long serialVersionUID = 0L;
-	
+
 	protected static final Logger log = LoggerFactory.getLogger(CohortMembership.class);
-	
+
 	private Integer cohortMemberId;
-	
+
 	private Cohort cohort;
-	
-	private Integer patientId;
-	
+
+	// private Integer patientId;
+
 	private Date startDate;
-	
+
 	private Date endDate;
-	
+
+	private Patient patient;
+
 	// Constructor
 	public CohortMembership() {
 	}
-	
-	public CohortMembership(Integer patientId, Date startDate) {
-		this.patientId = patientId;
+
+	public CohortMembership(Patient patient, Date startDate) {
+		this.patient = patient;
 		this.startDate = startDate;
 	}
-	
-	public CohortMembership(Integer patientId) {
-		this(patientId, new Date());
+
+
+
+	public CohortMembership(Patient patient) {
+		this(patient, new Date());
 	}
-	
+
 	/**
 	 * Compares asOfDate to [startDate, endDate], inclusive of both endpoints.
 	 * @param asOfDate date to compare if membership is active or inactive
@@ -57,57 +61,74 @@ public class CohortMembership extends BaseOpenmrsData implements Comparable<Coho
 		return !this.getVoided() && OpenmrsUtil.compare(startDate, date) <= 0
 				&& OpenmrsUtil.compareWithNullAsLatest(date, endDate) <= 0;
 	}
-	
+
 	public boolean isActive() {
 		return isActive(null);
 	}
-	
+
 	@Override
 	public Integer getId() {
 		return getCohortMemberId();
 	}
-	
+
 	@Override
 	public void setId(Integer id) {
 		setCohortMemberId(id);
 	}
-	
+
 	public Integer getCohortMemberId() {
 		return cohortMemberId;
 	}
-	
+
 	public void setCohortMemberId(Integer cohortMemberId) {
 		this.cohortMemberId = cohortMemberId;
 	}
-	
+
 	public Cohort getCohort() {
 		return cohort;
 	}
-	
+
 	public void setCohort(Cohort cohort) {
 		this.cohort = cohort;
 	}
-	
+
 	public Integer getPatientId() {
-		return patientId;
+		if(this.getPatient() == null){
+			return null;
+		}
+		return this.getPatient().getPatientId();
 	}
-	
-	public void setPatientId(Integer patientId) {
-		this.patientId = patientId;
-	}
-	
+
+	// public void setPatientId(Integer patientId) {
+	// 	this.patientId = patientId;
+	// }
+
 	public Date getStartDate() {
 		return startDate;
 	}
-	
+
+	/**
+	* @return Returns the patient.
+	*/
+	public Patient getPatient() {
+		return patient;
+	}
+
+	/**
+	 * @param patient The patient to set.
+	 */
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
+
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
-	
+
 	public Date getEndDate() {
 		return endDate;
 	}
-	
+
 	/**
 	 * OpenMRS treats a membership as active from its startDate to endDate <em>inclusive</em> of both.
 	 * The underlying database field stores a date+time, so in the common case (where you don't care about the time of day
@@ -117,7 +138,7 @@ public class CohortMembership extends BaseOpenmrsData implements Comparable<Coho
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
-	
+
 	/**
 	 * Sorts by following fields, in order:
 	 * <ol>
@@ -141,7 +162,7 @@ public class CohortMembership extends BaseOpenmrsData implements Comparable<Coho
 			ret = -OpenmrsUtil.compareWithNullAsEarliest(this.getStartDate(), o.getStartDate());
 		}
 		if (ret == 0) {
-			ret = this.getPatientId().compareTo(o.getPatientId());
+			ret = this.getPatient().personId.compareTo(o.getPatient().personId);
 		}
 		if (ret == 0) {
 			ret = this.getUuid().compareTo(o.getUuid());
